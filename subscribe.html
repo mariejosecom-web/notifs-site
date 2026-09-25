@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Abonnement aux notifications</title>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 30px; line-height: 1.5; }
+    .success { color: #2e7d32; font-weight: bold; }
+    .error { color: #c62828; }
+  </style>
+</head>
+<body>
+  <h3 id="status">Demande d'autorisation en cours...</h3>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "TON_API_KEY",
+      authDomain: "TON_PROJET.firebaseapp.com",
+      projectId: "TON_PROJECT_ID",
+      storageBucket: "TON_PROJET.appspot.com",
+      messagingSenderId: "479671843496",
+      appId: "1:479671843496:web:0b338af1d5cced5f9ce09d"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+    const db = firebase.firestore();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const topic = urlParams.get('topic') || 'general';
+
+    async function activer() {
+      const statusEl = document.getElementById('status');
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          // Chemin relatif adapté à ton dépôt GitHub
+          const registration = await navigator.serviceWorker.register('/notifs-site/firebase-messaging-sw.js');
+          
+          const token = await messaging.getToken({ 
+            vapidKey: "TA_CLE_VAPID_GENEREE",
+            serviceWorkerRegistration: registration
+          });
+
+          if (token) {
+            await db.collection("abonnements_fcm").doc(token).set({
+              token: token,
+              pageTopic: topic,
+              date: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            statusEl.className = "success";
+            statusEl.innerText = "Alertes activées ! Tu peux fermer cette fenêtre.";
+          }
+        } else {
+          statusEl.className = "error";
+          statusEl.innerText = "Autorisation refusée.";
+        }
+      } catch (err) {
+        statusEl.className = "error";
+        statusEl.innerText = "Erreur technique lors de l'enregistrement.";
+        console.error(err);
+      }
+    }
+
+    activer();
+  </script>
+</body>
+</html>
