@@ -1,0 +1,40 @@
+name: Envoyer une notification Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Titre de la notification'
+        required: true
+        default: 'Nouveau conseil du Chef !'
+      body:
+        description: 'Texte du message'
+        required: true
+        default: 'Venez découvrir la dernière astuce sur le site.'
+      url:
+        description: 'Lien quand on clique sur la notification'
+        required: false
+        default: 'https://chefjako.fr'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer firebase-admin
+        run: npm install firebase-admin
+
+      - name: Lancer l'envoi
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          NOTIF_TITLE: ${{ github.event.inputs.title }}
+          NOTIF_BODY: ${{ github.event.inputs.body }}
+          NOTIF_URL: ${{ github.event.inputs.url }}
+        run: node send.js
