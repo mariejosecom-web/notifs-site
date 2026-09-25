@@ -16,8 +16,8 @@
   <h3 id="status">Demande d'autorisation en cours...</h3>
 
   <script>
-const firebaseConfig = {
-      apiKey:"AIzaSyCmbImmOuNb4k0iuVSkFeWiZ-8je8zbxmA",
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmbImmOuNb4k0iuVSkFeWiZ-8je8zbxmA",
       authDomain: "forum-discussion-f47cc.firebaseapp.com",
       databaseURL: "https://forum-discussion-f47cc-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "forum-discussion-f47cc",
@@ -34,35 +34,33 @@ const firebaseConfig = {
     const topic = urlParams.get('topic') || 'general';
 
     async function activer() {
-      const statusEl = document.getElementById('status');
+      const statusEl = document.getElementById("status");
       try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-          // Chemin relatif adapté à ton dépôt GitHub
-          const registration = await navigator.serviceWorker.register('/notifs-site/firebase-messaging-sw.js');
-          
-          const token = await messaging.getToken({ 
-            vapidKey: "BAj0tfDu2K645favJn2epR7wOgZpBaLR3JEW24U0BXHhkBL4ouL8Vgr_L18dfhjcRnh8PYYp-usbYQ1B0X4dAOA",
-            serviceWorkerRegistration: registration
+          statusEl.innerText = "Enregistrement en cours...";
+          const token = await messaging.getToken({
+            vapidKey: "BAj0tfDu2K645favJn2epR7w0gZpBa1R3JEW24U0BXHhkBL4ouL8Vgr_L18dfhjcRnh8PYYp-usbYQ1B0X4dA0A"
           });
 
           if (token) {
             await db.collection("abonnements_fcm").doc(token).set({
               token: token,
               pageTopic: topic,
-              date: firebase.firestore.FieldValue.serverTimestamp()
+              date: new Date().toISOString()
             });
+
             statusEl.className = "success";
-            statusEl.innerText = "Alertes activées ! Tu peux fermer cette fenêtre.";
+            statusEl.innerHTML = "✅ Alertes activées !<br><small>Tu peux fermer cette fenêtre.</small>";
           }
         } else {
           statusEl.className = "error";
           statusEl.innerText = "Autorisation refusée.";
         }
       } catch (err) {
+        console.error(err);
         statusEl.className = "error";
         statusEl.innerText = "Erreur technique lors de l'enregistrement.";
-        console.error(err);
       }
     }
 
