@@ -16,13 +16,14 @@
   <h3 id="status">Demande d'autorisation en cours...</h3>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "METS_ICI_LA_CLE_API_TROUVEE_DANS_L_ONGLET_PARAMETRES",
-    authDomain: "forum-discussion-f47cc.firebaseapp.com",
-    projectId: "forum-discussion-f47cc",
-    storageBucket: "forum-discussion-f47cc.appspot.com",
-    messagingSenderId: "479671843496",
-    appId: "1:479671843496:web:0b338af1d5cced5f9ce09d"
+const firebaseConfig = {
+      apiKey: "AIzaSyCmbImmOuNb4k0iuVSkFeWiZ-8je8zbxmA",
+      authDomain: "forum-discussion-f47cc.firebaseapp.com",
+      databaseURL: "https://forum-discussion-f47cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "forum-discussion-f47cc",
+      storageBucket: "forum-discussion-f47cc.firebasestorage.app",
+      messagingSenderId: "479671843496",
+      appId: "1:479671843496:web:0b338af1d5cced5f9ce09d"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -41,7 +42,7 @@
           const registration = await navigator.serviceWorker.register('/notifs-site/firebase-messaging-sw.js');
           
           const token = await messaging.getToken({ 
-            vapidKey: "TA_CLE_VAPID_GENEREE",
+            vapidKey: "BAj0tfDu2K645favJn2epR7wOgZpBaLR3JEW24U0BXHhkBL4ouL8Vgr_L18dfhjcRnh8PYYp-usbYQ1B0X4dAOA",
             serviceWorkerRegistration: registration
           });
 
