@@ -17,7 +17,7 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyCmbImmOuNb4k0iuVSkFeWiZ-8je8zbxmA",
+      apiKey: "AIzaSyCmbImmOUnB4k0iuVSkFeWIz-8je8ZbxmA",
       authDomain: "forum-discussion-f47cc.firebaseapp.com",
       databaseURL: "https://forum-discussion-f47cc-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "forum-discussion-f47cc",
@@ -40,7 +40,6 @@
         if (permission === 'granted') {
           statusEl.innerText = "Enregistrement en cours...";
 
-          // Enregistrement ciblé sur le chemin GitHub Pages
           const registration = await navigator.serviceWorker.register('/notifs-site/firebase-messaging-sw.js');
 
           const token = await messaging.getToken({
